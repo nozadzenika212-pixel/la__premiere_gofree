@@ -998,6 +998,56 @@ main,section,.container,.carousel-wrap{max-width:100%!important;overflow-x:hidde
   }
 }
 </style>
+
+<style id="mobile-compact-and-craft-receipt">
+/* Compact phone layout: desktop-like proportions without oversized sections/cards. */
+@media(max-width:680px){
+  section{padding:3rem .85rem!important;}
+  .menu-header{padding:0 .85rem 1.6rem!important;}
+  .menu-section-title{margin:1.8rem .85rem .8rem!important;font-size:1.08rem!important;}
+  .carousel{padding:0 .85rem .75rem!important;gap:10px!important;}
+  .menu-card{
+    flex:0 0 min(68vw,255px)!important;
+    width:min(68vw,255px)!important;
+    height:min(91vw,345px)!important;
+    min-height:300px!important;
+  }
+  .menu-card-overlay{padding:.9rem!important;}
+  .menu-card-tag{font-size:.52rem!important;}
+  .menu-card-name{font-size:.92rem!important;}
+  .menu-card-desc{font-size:.64rem!important;}
+  .menu-card-price{font-size:1rem!important;}
+  .featured-card{height:225px!important;}
+  .sticks-visual{height:min(82vw,360px)!important;}
+  .about-img-grid img{height:155px!important;}
+  .section-title{font-size:clamp(1.75rem,8vw,2.25rem)!important;}
+  .section-sub{font-size:.88rem!important;}
+}
+@media(max-width:390px){
+  .menu-card{flex-basis:70vw!important;width:70vw!important;height:96vw!important;min-height:290px!important;}
+  .featured-card{height:210px!important;}
+}
+
+/* White craft receipt shown after finishing a custom dessert. */
+#craftReceiptModal{display:none;position:fixed;inset:0;z-index:1200;background:rgba(10,5,2,.88);backdrop-filter:blur(9px);align-items:center;justify-content:center;padding:1rem;}
+#craftReceiptModal.open{display:flex;}
+.craft-receipt{width:min(94vw,430px);max-height:90svh;overflow-y:auto;background:#fff;color:#22150e;border-radius:10px;padding:1.5rem;box-shadow:0 30px 90px rgba(0,0,0,.55);position:relative;font-family:'DM Sans',sans-serif;}
+.receipt-close{position:absolute;right:.8rem;top:.7rem;border:0;background:transparent;font-size:1.25rem;cursor:pointer;color:#4b382d;}
+.receipt-brand{text-align:center;font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;}
+.receipt-sub{text-align:center;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:#79665a;margin-top:.2rem;}
+.receipt-dash{border-top:1px dashed #b9aaa1;margin:1rem 0;}
+.receipt-row{display:flex;justify-content:space-between;gap:1rem;font-size:.86rem;margin:.48rem 0;}
+.receipt-row strong{text-align:right;}
+.receipt-items{font-size:.82rem;line-height:1.6;color:#4e4037;white-space:pre-line;}
+.receipt-total{display:flex;justify-content:space-between;font-size:1.2rem;font-weight:800;margin-top:.8rem;}
+.receipt-note{text-align:center;font-size:.78rem;line-height:1.5;color:#5f5047;margin-top:1rem;}
+.receipt-number{text-align:center;font-size:1.35rem;font-weight:800;letter-spacing:.08em;margin:.7rem 0;color:#8b5a12;}
+.receipt-actions{display:flex;gap:.65rem;margin-top:1rem;}
+.receipt-actions button{flex:1;padding:.75rem;border-radius:5px;cursor:pointer;font-weight:700;font-family:inherit;}
+.receipt-print{background:#22150e;color:white;border:1px solid #22150e;}
+.receipt-done{background:white;color:#22150e;border:1px solid #b9aaa1;}
+</style>
+
 </head>
 <body>
 
@@ -1679,10 +1729,33 @@ main,section,.container,.carousel-wrap{max-width:100%!important;overflow-x:hidde
         <div class="builder-total-label" id="builderTotalLabel">Total</div>
         <div class="builder-total" id="totalPrice">12 ₾</div>
       </div>
-      <button class="builder-done" onclick="closeWaffleBuilder()" id="builderDoneBtn">Done</button>
+      <button class="builder-done" onclick="finishCraft()" id="builderDoneBtn">Done &amp; get receipt</button>
     </div>
   </div>
 </div>
+
+<div id="craftReceiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptTitle">
+  <div class="craft-receipt">
+    <button class="receipt-close" onclick="closeCraftReceipt()" aria-label="Close">✕</button>
+    <div class="receipt-brand" id="receiptTitle">La Première · Go Free</div>
+    <div class="receipt-sub">Custom order receipt</div>
+    <div class="receipt-number" id="receiptNumber">#0000</div>
+    <div class="receipt-dash"></div>
+    <div class="receipt-row"><span>Product</span><strong id="receiptProduct"></strong></div>
+    <div class="receipt-row"><span>Base</span><strong id="receiptBase"></strong></div>
+    <div class="receipt-dash"></div>
+    <div class="receipt-items" id="receiptItems"></div>
+    <div class="receipt-dash"></div>
+    <div class="receipt-total"><span>Total</span><span id="receiptTotal"></span></div>
+    <div class="receipt-row"><span>Created</span><strong id="receiptTime"></strong></div>
+    <p class="receipt-note">Show this receipt at the cashier so the team can prepare exactly what you crafted.</p>
+    <div class="receipt-actions">
+      <button class="receipt-print" onclick="window.print()">Print / Save</button>
+      <button class="receipt-done" onclick="closeCraftReceipt()">Close</button>
+    </div>
+  </div>
+</div>
+
 <div id="cardModal" role="dialog" aria-modal="true" aria-labelledby="cardModalName">
   <div class="card-modal-box">
     <button class="card-modal-close" onclick="closeCard()" aria-label="Close">✕</button>
@@ -2119,6 +2192,38 @@ function updateSummary() {
   document.getElementById('totalPrice').textContent = total + ' ₾';
 }
 
+function finishCraft() {
+  const d = allToppings[currentType];
+  let total = d.base.price;
+  const selected = [];
+  d.categories.forEach(cat => cat.items.forEach(item => {
+    const n = (counts[currentType] || {})[item.name] || 0;
+    if (n > 0) {
+      selected.push(item.name + ' ×' + n + '  —  ' + (item.price * n) + ' ₾');
+      total += item.price * n;
+    }
+  }));
+  const orderNo = String(Date.now()).slice(-4);
+  document.getElementById('receiptNumber').textContent = '#' + orderNo;
+  document.getElementById('receiptProduct').textContent = d.title;
+  document.getElementById('receiptBase').textContent = d.base.name + ' — ' + d.base.price + ' ₾';
+  document.getElementById('receiptItems').textContent = selected.length ? selected.join('\n') : 'No extra toppings';
+  document.getElementById('receiptTotal').textContent = total + ' ₾';
+  document.getElementById('receiptTime').textContent = new Date().toLocaleString();
+  closeWaffleBuilder();
+  document.getElementById('craftReceiptModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCraftReceipt() {
+  document.getElementById('craftReceiptModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('craftReceiptModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCraftReceipt();
+});
+
 document.getElementById('waffleModal').addEventListener('click', function(e) {
   if (e.target === this) closeWaffleBuilder();
 });
@@ -2448,6 +2553,45 @@ document.addEventListener('DOMContentLoaded', () => initAutoTranslationNodes(), 
     c.scrollTo({left: target, behavior:'smooth'});
     setTimeout(() => clamp(c), 450);
   };
+})();
+</script>
+
+<style id="safe-short-row-layout">
+/* Safe desktop layout for short product rows: keep normal card proportions and distribute them evenly. */
+@media (min-width: 900px){
+  .carousel.safe-short-row{
+    display:flex !important;
+    overflow-x:hidden !important;
+    justify-content:space-between !important;
+    gap:16px !important;
+    padding-left:1.5rem !important;
+    padding-right:1.5rem !important;
+  }
+  .carousel.safe-short-row > .menu-card{
+    flex:1 1 0 !important;
+    width:auto !important;
+    min-width:220px !important;
+    max-width:360px !important;
+  }
+  .carousel.safe-short-row + .carousel-controls{
+    display:none !important;
+  }
+}
+</style>
+<script id="safe-short-row-layout-script">
+(function(){
+  function applySafeRows(){
+    const desktop=window.matchMedia('(min-width: 900px)').matches;
+    document.querySelectorAll('.carousel').forEach(function(carousel){
+      const cards=Array.from(carousel.children).filter(function(el){
+        return el.classList && el.classList.contains('menu-card');
+      });
+      carousel.classList.toggle('safe-short-row', desktop && cards.length>0 && cards.length<=5);
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',applySafeRows,{once:true});
+  else applySafeRows();
+  window.addEventListener('resize',applySafeRows,{passive:true});
 })();
 </script>
 
