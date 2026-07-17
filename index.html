@@ -883,6 +883,121 @@ html[dir="rtl"] .location-grid,html[dir="rtl"] .hero-content{text-align:right;}
   #cardModal .card-modal-body{padding:1rem!important;overflow-y:auto!important;max-height:calc(90svh - 200px)!important;}
 }
 </style>
+<style>
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE DESKTOP-MATCH + HARD CAROUSEL LIMITS
+   Keeps the phone version visually close to desktop and prevents
+   dragging past the first/last product into empty horizontal space.
+   ═══════════════════════════════════════════════════════════════ */
+html,body{width:100%;max-width:100%;overflow-x:hidden!important;overscroll-behavior-x:none!important;}
+main,section,.container,.carousel-wrap{max-width:100%!important;overflow-x:hidden;}
+.carousel{
+  width:100%;max-width:100%;
+  overscroll-behavior-x:none!important;
+  scroll-snap-type:x mandatory!important;
+  scroll-padding-inline:1rem;
+  -webkit-overflow-scrolling:touch;
+}
+.carousel > .menu-card{scroll-snap-align:start;scroll-snap-stop:always;}
+
+@media(max-width:680px){
+  /* Keep the same premium desktop language, only stacked for phone. */
+  nav{padding:.65rem .85rem!important;}
+  .nav-logo img{width:44px!important;height:44px!important;}
+  .nav-logo-text strong{font-size:.96rem!important;}
+  .lang-btn{font-size:.68rem!important;padding:.38rem .58rem!important;}
+
+  #hero{min-height:auto!important;}
+  .hero-content{
+    display:grid!important;grid-template-columns:1fr!important;
+    min-height:auto!important;
+    padding:calc(var(--nav-h) + 1.5rem) 1rem 2.4rem!important;
+    gap:1.4rem!important;text-align:center!important;
+  }
+  .hero-text{padding:0!important;transform:none!important;align-items:center!important;}
+  .hero-text h1{font-size:clamp(2.15rem,10.5vw,3rem)!important;line-height:1.05!important;margin-bottom:1rem!important;}
+  .hero-text p{font-size:1rem!important;line-height:1.68!important;max-width:520px!important;margin-bottom:1.5rem!important;}
+  .hero-actions{justify-content:center!important;gap:.8rem!important;}
+  .hero-actions .btn-primary{width:auto!important;min-width:190px;padding:.82rem 1.35rem!important;font-size:.76rem!important;}
+  .hero-actions .btn-outline{width:auto!important;font-size:.76rem!important;}
+  .hero-visual{margin:0!important;gap:1rem!important;transform:none!important;}
+  .hero-brand-title{font-size:1.75rem!important;}
+  .hero-brand-sub{font-size:1.08rem!important;}
+  .hero-brand-craft{font-size:.54rem!important;}
+  .hero-food-row{display:grid!important;grid-template-columns:1fr .8fr 1fr!important;width:100%!important;max-width:520px!important;gap:.35rem!important;align-items:end!important;}
+  .hero-logo-wrap{width:min(34vw,155px)!important;height:min(34vw,155px)!important;}
+  #heroStick{height:min(55vw,245px)!important;}
+  #heroCrepe{height:min(37vw,165px)!important;}
+  .hero-food-label{font-size:.48rem!important;letter-spacing:.12em!important;white-space:nowrap;}
+
+  section{padding:4rem 1rem!important;}
+  .section-title{font-size:clamp(2rem,9vw,2.7rem)!important;line-height:1.08!important;}
+  .section-sub{font-size:.98rem!important;line-height:1.7!important;}
+  .menu-header{padding:0 1rem 2.2rem!important;}
+  .menu-section-title{font-size:1.25rem!important;margin:2.4rem 1rem 1rem!important;}
+
+  /* Large phone cards: same proportions and typography as desktop. */
+  .carousel{gap:14px!important;padding:0 1rem 1rem!important;}
+  .menu-card{
+    flex:0 0 min(82vw,330px)!important;
+    width:min(82vw,330px)!important;
+    height:min(112vw,430px)!important;
+    min-height:370px!important;
+    border-radius:8px!important;
+  }
+  .menu-card-overlay{padding:1.15rem!important;}
+  .menu-card-tag{font-size:.62rem!important;}
+  .menu-card-name{font-size:1.08rem!important;}
+  .menu-card-desc{font-size:.76rem!important;line-height:1.45!important;}
+  .menu-card-price{font-size:1.15rem!important;}
+  .carousel-controls{padding:.55rem 1rem 0!important;}
+  .carousel-btn{width:42px!important;height:42px!important;}
+
+  #sticks,#about{grid-template-columns:1fr!important;gap:2.4rem!important;}
+  .sticks-visual{height:min(105vw,480px)!important;}
+  .sticks-img-thumb{width:115px!important;height:115px!important;}
+  .about-img-grid{grid-template-columns:1.2fr .8fr!important;gap:8px!important;}
+  .about-img-grid img{height:190px!important;}
+  .location-grid{grid-template-columns:1fr!important;gap:2rem!important;}
+  .location-grid img{min-height:300px!important;object-fit:cover!important;}
+  .featured-grid{grid-template-columns:1fr 1fr!important;gap:12px!important;}
+  .featured-card{height:300px!important;}
+
+  footer{padding:2rem 1rem!important;}
+
+  /* Product window stays centered and visually matches desktop. */
+  #cardModal{padding:.7rem!important;align-items:center!important;overflow:hidden!important;}
+  #cardModal .card-modal-box{width:min(96vw,480px)!important;max-height:92svh!important;border-radius:12px!important;}
+  #cardModal .card-modal-img{height:min(48svh,390px)!important;max-height:min(48svh,390px)!important;object-fit:contain!important;background:#fff!important;}
+  #cardModal .card-modal-body{padding:1.2rem!important;max-height:44svh!important;overflow-y:auto!important;}
+  #cardModal .card-modal-name{font-size:1.65rem!important;}
+  #cardModal .card-modal-desc{font-size:.98rem!important;}
+  #cardModal .card-modal-price{font-size:1.75rem!important;}
+}
+
+@media(max-width:390px){
+  .menu-card{flex-basis:84vw!important;width:84vw!important;height:118vw!important;min-height:355px!important;}
+  .featured-grid{grid-template-columns:1fr!important;}
+  .featured-card{height:330px!important;}
+  .about-img-grid{grid-template-columns:1fr!important;}
+  .about-img-grid img{height:220px!important;}
+}
+</style>
+
+<style>
+/* Fill the Chocolate Sticks row on desktop so no false empty slot appears. */
+@media (min-width: 900px){
+  #sticksCarousel{
+    overflow-x:hidden !important;
+  }
+  #sticksCarousel > .menu-card{
+    flex:0 0 calc((100% - 64px - 3rem) / 5) !important;
+    width:calc((100% - 64px - 3rem) / 5) !important;
+    min-width:0 !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -2223,6 +2338,117 @@ document.addEventListener('keydown', function(e) {
 
 <script>
 document.addEventListener('DOMContentLoaded', () => initAutoTranslationNodes(), { once:true });
+</script>
+
+
+<script>
+/* Hard-stop every horizontal carousel at its real first/last card. */
+(function(){
+  function clampCarousel(c){
+    const max=Math.max(0,c.scrollWidth-c.clientWidth);
+    if(c.scrollLeft<0)c.scrollLeft=0;
+    if(c.scrollLeft>max)c.scrollLeft=max;
+  }
+  function setup(c){
+    let raf=0;
+    const clamp=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>clampCarousel(c));};
+    c.addEventListener('scroll',clamp,{passive:true});
+    c.addEventListener('touchend',()=>setTimeout(()=>clampCarousel(c),40),{passive:true});
+    c.addEventListener('pointerup',()=>setTimeout(()=>clampCarousel(c),40),{passive:true});
+    window.addEventListener('resize',clamp,{passive:true});
+    clamp();
+  }
+  function init(){document.querySelectorAll('.carousel').forEach(setup);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+
+
+
+<style>
+/* Prevent horizontal rubber-banding beyond either carousel edge. */
+.carousel{
+  overscroll-behavior-x: none !important;
+  scroll-chaining: none;
+}
+</style>
+<script>
+/* Lock every carousel at BOTH the first and last card, including iPhone rubber-band swipes. */
+(function(){
+  const EPS = 2;
+
+  function maxScroll(el){
+    return Math.max(0, el.scrollWidth - el.clientWidth);
+  }
+
+  function clamp(el){
+    const max = maxScroll(el);
+    if (el.scrollLeft <= EPS) el.scrollLeft = 0;
+    else if (el.scrollLeft >= max - EPS) el.scrollLeft = max;
+  }
+
+  function install(el){
+    let startX = 0;
+    let startY = 0;
+    let startScroll = 0;
+    let horizontal = false;
+
+    el.addEventListener('touchstart', function(e){
+      if (!e.touches.length) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      startScroll = el.scrollLeft;
+      horizontal = false;
+      clamp(el);
+    }, {passive:true});
+
+    el.addEventListener('touchmove', function(e){
+      if (!e.touches.length) return;
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+
+      if (!horizontal && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) horizontal = true;
+      if (!horizontal) return;
+
+      const max = maxScroll(el);
+      const atStart = startScroll <= EPS || el.scrollLeft <= EPS;
+      const atEnd = startScroll >= max - EPS || el.scrollLeft >= max - EPS;
+      const draggingPastStart = atStart && dx > 0;
+      const draggingPastEnd = atEnd && dx < 0;
+
+      if (draggingPastStart || draggingPastEnd) {
+        e.preventDefault();
+        el.scrollLeft = draggingPastStart ? 0 : max;
+      }
+    }, {passive:false});
+
+    ['touchend','touchcancel','pointerup','scroll'].forEach(type => {
+      el.addEventListener(type, function(){
+        requestAnimationFrame(() => clamp(el));
+      }, {passive:true});
+    });
+  }
+
+  function init(){
+    document.querySelectorAll('.carousel').forEach(install);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, {once:true});
+  else init();
+
+  /* Also keep arrow-button movement inside the valid range. */
+  window.scrollC = function(id, dir){
+    const c = document.getElementById(id);
+    if (!c) return;
+    const card = c.querySelector('.menu-card');
+    const gap = parseFloat(getComputedStyle(c).gap) || 16;
+    const step = card ? card.getBoundingClientRect().width + gap : 316;
+    const max = maxScroll(c);
+    const target = Math.max(0, Math.min(max, c.scrollLeft + dir * step));
+    c.scrollTo({left: target, behavior:'smooth'});
+    setTimeout(() => clamp(c), 450);
+  };
+})();
 </script>
 
 </body>
