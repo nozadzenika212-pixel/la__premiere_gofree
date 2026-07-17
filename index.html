@@ -848,6 +848,41 @@ html[dir="rtl"] .location-grid,html[dir="rtl"] .hero-content{text-align:right;}
 <meta property="og:locale" content="en_US"/>
 <meta name="theme-color" content="#1A0D05"/>
 <meta name="robots" content="index,follow"/>
+
+<style id="restore-original-modal-behavior">
+/* Restore the original product-window opening layout */
+#cardModal{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(10,5,2,.88);backdrop-filter:blur(10px);
+  align-items:center!important;justify-content:center!important;
+  padding:1rem!important;overflow:hidden!important;
+}
+#cardModal.open{display:flex!important;}
+#cardModal .card-modal-box{
+  background:#fff;border:.5px solid rgba(212,168,85,.25);border-radius:12px;
+  max-width:480px!important;width:100%!important;max-height:90svh!important;
+  overflow:hidden!important;position:relative;display:flex!important;
+  flex-direction:column!important;grid-template-columns:none!important;
+  margin:0!important;animation:modalSlideUp .3s ease;
+}
+#cardModal .card-modal-img{
+  width:100%!important;height:auto!important;max-height:500px!important;
+  min-height:0!important;object-fit:contain!important;object-position:center;
+  display:block;flex-shrink:0;padding:0!important;background:transparent!important;
+}
+#cardModal .card-modal-body{
+  padding:1.5rem!important;overflow-y:auto!important;max-height:none!important;
+  display:block!important;align-self:auto!important;
+}
+#cardModal .card-modal-footer{margin-top:0!important;padding-top:0!important;}
+@media(max-width:900px){
+  #cardModal{padding:1rem!important;align-items:center!important;overflow:hidden!important;}
+  #cardModal.open{display:flex!important;}
+  #cardModal .card-modal-box{max-height:90svh!important;margin:0!important;overflow:hidden!important;}
+  #cardModal .card-modal-img{height:200px!important;max-height:200px!important;object-fit:contain!important;}
+  #cardModal .card-modal-body{padding:1rem!important;overflow-y:auto!important;max-height:calc(90svh - 200px)!important;}
+}
+</style>
 </head>
 <body>
 
